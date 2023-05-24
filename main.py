@@ -34,6 +34,16 @@ while True:
         resultado = ordenar_por_puntos_promedios(lista_jugadores)
         for jugador in resultado:
             print(jugador["estadisticas"]["promedio_puntos_por_partido"])
+    elif (opcion == "6"):
+        calcular_max_rebotes(
+            lista_jugadores, "rebotes_totales")
+    elif (opcion == "7"):
+        calcular_max_rebotes(lista_jugadores,
+                             "porcentaje_tiros_de_campo")
+    elif (opcion == "8"):
+        calcular_max_rebotes(lista_jugadores,
+                             "asistencias_totales")
+
     elif (opcion == "z" or opcion == "Z"):
         print("Saliste del programa")
         break
