@@ -4,7 +4,7 @@ import json
 
 def parse_json(nombre_archivo: str):
     lista_jugadores = []
-    with open(nombre_archivo, "r") as archivo:
+    with open(nombre_archivo, "r", encoding="utf-8") as archivo:
         dict = json.load(archivo)
         lista_jugadores = dict["jugadores"]
 
@@ -25,10 +25,15 @@ while True:
         if (indice >= 0 and indice < len(lista_jugadores)):
             mostrar_jugador_segun_indice(lista_jugadores, indice)
     elif (opcion == "3"):
-        nombre = input("Ingrese nombre de jugador: ")
-        buscar_por_nombre(lista_jugadores, nombre)
+        guardar_dic_segun_indice(lista_jugadores, indice)
     elif (opcion == "4"):
-        pass
+        nombre = input("Ingrese nombre de jugador: ").lower().capitalize()
+        buscar_por_nombre(lista_jugadores, nombre)
+    elif (opcion == "5"):
+        promedio_puntos(lista_jugadores)
+        resultado = ordenar_por_puntos_promedios(lista_jugadores)
+        for jugador in resultado:
+            print(jugador["estadisticas"]["promedio_puntos_por_partido"])
     elif (opcion == "z" or opcion == "Z"):
         print("Saliste del programa")
         break
