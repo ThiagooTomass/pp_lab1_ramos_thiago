@@ -53,7 +53,7 @@ while True:
         print("El promedio del Dream Team por partido es: {0}".format(
             promedio))
 
-        resultado = ordenar_por_nombre_o_posicion(lista_jugadores, "nombre")
+        resultado = ordenar_por_nombre_o_posicion(lista_jugadores, "nombre",True)
         printear_ordenamiento(resultado, "promedio_puntos_por_partido")
 
     elif (opcion == "6"):
@@ -133,12 +133,12 @@ while True:
 
         numero_ingresado = funcion_numero_por_usuario()
         valores_ordenados = ordenar_por_nombre_o_posicion(
-            lista_jugadores, "posicion")
+            lista_jugadores, "posicion",True)
         mayor_que_promedio(valores_ordenados, numero_ingresado,
                            "porcentaje_tiros_de_campo")
     elif (opcion == "23"):
 
-        ejercicio_bonus(lista_jugadores)
+        calcular_posicion_rankin(lista_jugadores)
 
     elif (opcion == "24"):
         print("Saliste del programa")

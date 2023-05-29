@@ -64,7 +64,7 @@ def buscar_por_nombre(lista_jugadores: list, nombre: str):
 # EJERCICIO 5
 
 
-def ordenar_por_nombre_o_posicion(lista_jugadores: list, key: str):
+def ordenar_por_nombre_o_posicion(lista_jugadores: list, key: str, opcion: bool):
     '''
     Esta funcion ordena en orden ascendente el promedio de puntos por partido
     recibe la lista 
@@ -79,13 +79,14 @@ def ordenar_por_nombre_o_posicion(lista_jugadores: list, key: str):
         return lista
     else:
         for jugador in lista[1:]:
-            if (jugador[key] > lista[0][key]):
+            if ((opcion == True and jugador[key] > lista[0][key]) or (opcion == False and jugador["estadisticas"][key] > lista[0]["estadisticas"][key])):
                 lista_derecha.append(jugador)
             else:
                 lista_izquierda.append(jugador)
 
-    lista_izquierda = ordenar_por_nombre_o_posicion(lista_izquierda, key)
-    lista_derecha = ordenar_por_nombre_o_posicion(lista_derecha, key)
+    lista_izquierda = ordenar_por_nombre_o_posicion(
+        lista_izquierda, key, opcion)
+    lista_derecha = ordenar_por_nombre_o_posicion(lista_derecha, key, opcion)
 
     return lista_izquierda + [lista[0]] + lista_derecha
 
@@ -142,7 +143,8 @@ def mayor_que_promedio(lista_jugadores: list, numero_consulta: int, key: str):
     recibe la lista de jguadores, el numero ingresado por el usuario, y la key a comparar
     '''
     contador = 0
-    lista_ordenada = ordenar_por_nombre_o_posicion(lista_jugadores, "nombre")
+    lista_ordenada = ordenar_por_nombre_o_posicion(
+        lista_jugadores, "nombre", True)
     for persoanje in lista_ordenada:
         if (persoanje["estadisticas"][key] > numero_consulta):
             print("El jugador {0}, tiene un promedio mayor al que ingresaste : {1}\n".format(
@@ -191,96 +193,42 @@ def mayor_cantidad_logros(lista_jugadores: list):
 # DE ACA PARA ABAJO EJERCICIO 23
 
 
-def ordenar_por_estadisticas(lista_jugadores: list, key: str):
+def calcular_posicion_rankin(lista: list):
     '''
-    Esta funcion ordena en orden ascendente el promedio de puntos por partido
-    recibe la lista 
-    retorna la lista completa pero ordenada 
+    Esta funcion ordena la lista por 4 estadisticas diferentes y muestra un ranking de los jugadores
+
+    recibe la lista de jugadores 
     '''
+    if (lista):
+        jugadores_auxiliar = lista[:]
 
-    lista = lista_jugadores[:]
-    lista_derecha = []
-    lista_izquierda = []
-    if len(lista) <= 1:
-        return lista
-    else:
-        for jugador in lista[1:]:
-            if (jugador["estadisticas"][key] < lista[0]["estadisticas"][key]):
-                lista_derecha.append(jugador)
-            else:
-                lista_izquierda.append(jugador)
+        lista_auxiliar_puntos = ordenar_por_nombre_o_posicion(
+            jugadores_auxiliar, "puntos_totales", False)
+        lista_auxiliar_rebotes = ordenar_por_nombre_o_posicion(
+            jugadores_auxiliar, "rebotes_totales", False)
+        lista_auxiliar_asistencias = ordenar_por_nombre_o_posicion(
+            jugadores_auxiliar, "asistencias_totales", False)
+        lista_auxiliar_robos = ordenar_por_nombre_o_posicion(
+            jugadores_auxiliar, "robos_totales", False)
 
-    lista_izquierda = ordenar_por_estadisticas(lista_izquierda, key)
-    lista_derecha = ordenar_por_estadisticas(lista_derecha, key)
+        jugadores_datos = ["Jugador,Puntos,Rebotes,Asistencias,Robos"]
+        for jugador in lista:
 
-    return lista_izquierda + [lista[0]] + lista_derecha
+            dato_jugador = []
 
+            indice_puntos = (lista_auxiliar_puntos.index(jugador))+1
+            indice_rebotes = (lista_auxiliar_rebotes.index(jugador))+1
+            indice_asistencias = (lista_auxiliar_asistencias.index(jugador))+1
+            indice_robos = (lista_auxiliar_robos.index(jugador))+1
 
-def ejercicio_bonus(lista_jugadores: list):
-    '''
-    Esta funcion calcula y guarda la posicion de cada jugador en 4 estadisticas diferentes
-    recibe la lista de jugadores
-    '''
-    resultado_puntos = ordenar_por_estadisticas(
-        lista_jugadores, "puntos_totales")
-    resultado_rebotes = ordenar_por_estadisticas(
-        lista_jugadores, "rebotes_totales")
-    resultado_asistencias = ordenar_por_estadisticas(
-        lista_jugadores, "asistencias_totales")
-    resultado_robos = ordenar_por_estadisticas(
-        lista_jugadores, "robos_totales")
+            dato_jugador.append(jugador["nombre"])
+            dato_jugador.append(str(indice_puntos))
+            dato_jugador.append(str(indice_rebotes))
+            dato_jugador.append(str(indice_asistencias))
+            dato_jugador.append(str(indice_robos))
 
-    lista_ordenada_por_nombre = ordenar_por_nombre_o_posicion(
-        lista_jugadores, "nombre")
-    i_puntos = 1
-    i_rebotes = 1
-    i_asistencias = 1
-    i_robos = 1
-    nombres_y_rango = []
+            dato_jugador = ",".join(dato_jugador)
+            jugadores_datos.append(dato_jugador)
 
-    for lista_puntos in (resultado_puntos):
-        for lista in lista_ordenada_por_nombre:
-            if (lista_puntos["nombre"] == lista["nombre"]):
-                nombres_y_rango.append(
-                    {"nombre": lista["nombre"], "posicion": i_puntos})
-
-        i_puntos += 1
-
-    for lista_rebotes in resultado_rebotes:
-        for lista in lista_ordenada_por_nombre:
-            if (lista_rebotes["nombre"] == lista["nombre"]):
-                nombres_y_rango.append(
-                    {"nombre": lista["nombre"], "posicion": i_rebotes})
-        i_rebotes += 1
-
-    for lista_asistencias in resultado_asistencias:
-        for lista in lista_ordenada_por_nombre:
-            if (lista_asistencias["nombre"] == lista["nombre"]):
-                nombres_y_rango.append(
-                    {"nombre": lista["nombre"], "posicion": i_asistencias})
-        i_asistencias += 1
-
-    for lista_robos in resultado_robos:
-        for lista in lista_ordenada_por_nombre:
-            if (lista_robos["nombre"] == lista["nombre"]):
-                nombres_y_rango.append(
-                    {"nombre": lista["nombre"], "posicion": i_robos})
-        i_robos += 1
-
-    karl = []
-    for jugador in lista_jugadores:
-        for elemento in nombres_y_rango:
-            if elemento["nombre"] == jugador["nombre"]:
-                karl.append(elemento["posicion"])
-
-    subgrupos = [karl[i:i+4] for i in range(0, len(karl), 4)]
-
-    subgrupos_con_nombres = []
-    for i in range(len(subgrupos)):
-        nombre_jugador = lista_jugadores[i]["nombre"]
-        subgrupo_con_nombres = "{0}, {1}".format(nombre_jugador, subgrupos[i])
-        subgrupos_con_nombres.append(subgrupo_con_nombres)
-
-    resultado = "\n".join(subgrupos_con_nombres)
-    print(resultado)
-    guardar_archivo("23_de_jordan.csv", resultado)
+        datos_para_csv = "\n".join(jugadores_datos)
+        guardar_archivo("ejercicio_23.csv", datos_para_csv)
