@@ -11,7 +11,7 @@ def mostrar_nombre_posicion(lista_jugadores: list):
     '''
 
     for jugador in lista_jugadores:
-        print("{0}-{1}".format(jugador["nombre"], jugador["posicion"]))
+        print("{0} - {1}".format(jugador["nombre"], jugador["posicion"]))
 
 # EJERCICIO 2
 
@@ -79,7 +79,8 @@ def ordenar_por_nombre_o_posicion(lista_jugadores: list, key: str, opcion: bool)
         return lista
     else:
         for jugador in lista[1:]:
-            if ((opcion == True and jugador[key] > lista[0][key]) or (opcion == False and jugador["estadisticas"][key] > lista[0]["estadisticas"][key])):
+            if ((opcion == True and jugador[key] > lista[0][key]) or
+                    (opcion == False and jugador["estadisticas"][key] < lista[0]["estadisticas"][key])):
                 lista_derecha.append(jugador)
             else:
                 lista_izquierda.append(jugador)
@@ -127,7 +128,8 @@ def calcular_max__min_segun_key(lista: list, key: str, flag: str):
 
     altura_max_inicial = None
     for jugador in lista:
-        if (altura_max_inicial is None or jugador["estadisticas"][key] > altura_max_inicial and flag == "mayor" or jugador["estadisticas"][key] < altura_max_inicial and flag == "menor"):
+        if (altura_max_inicial is None or jugador["estadisticas"][key] > altura_max_inicial and flag == "mayor" or
+                jugador["estadisticas"][key] < altura_max_inicial and flag == "menor"):
             altura_max_inicial = jugador["estadisticas"][key]
             indice_mas_alto_o_bajo = jugador
 
@@ -204,10 +206,13 @@ def calcular_posicion_rankin(lista: list):
 
         lista_auxiliar_puntos = ordenar_por_nombre_o_posicion(
             jugadores_auxiliar, "puntos_totales", False)
+
         lista_auxiliar_rebotes = ordenar_por_nombre_o_posicion(
             jugadores_auxiliar, "rebotes_totales", False)
+
         lista_auxiliar_asistencias = ordenar_por_nombre_o_posicion(
             jugadores_auxiliar, "asistencias_totales", False)
+
         lista_auxiliar_robos = ordenar_por_nombre_o_posicion(
             jugadores_auxiliar, "robos_totales", False)
 
@@ -232,3 +237,56 @@ def calcular_posicion_rankin(lista: list):
 
         datos_para_csv = "\n".join(jugadores_datos)
         guardar_archivo("ejercicio_23.csv", datos_para_csv)
+
+
+def examne_parcial_extra(lista_jugadores: list):
+    '''
+    Esta funcion muestra la cantidad de posiciones que hay entre los jugadores
+    recibe la lista de jugadores
+    '''
+    lista_nueva = {}
+    for jugador in lista_jugadores:
+        if jugador["posicion"] == "":
+            jugador["posicion"] = "La lista se encuentra vacía"
+        valor = jugador["posicion"].capitalize()
+        if valor in lista_nueva:
+            lista_nueva[valor] += 1
+        else:
+            lista_nueva[valor] = 1
+    for atributo, valor in lista_nueva.items():
+        print("{0} : {1}".format(atributo, valor))
+
+
+def examne_parcial_extrav2(lista_jugadores: list):
+    '''
+    Esta funcion extrae el numero de los all-star, los ordena y los imprime
+
+    recibe la lista de jugadores
+    '''
+    lista_con_nombres_all_star = []
+    for cadena in lista_jugadores:
+        for i in range(len(cadena["logros"])):
+            if re.search(r"All-Star$", cadena["logros"][i]):
+                logros_numeros = re.sub(r'[^0-9]', '', cadena["logros"][i])
+                posicion = int(logros_numeros)
+                diccionario = {
+                    "nombre": cadena["nombre"],
+                    "posicion": posicion
+                }
+                lista_con_nombres_all_star.append(diccionario)
+    valores_ordenados = ordenar_por_nombre_o_posicion(
+        lista_con_nombres_all_star, "posicion", True)
+    for resultado in valores_ordenados:
+        nombre = resultado["nombre"]
+        posicion = resultado["posicion"]
+        print("{0} ({1} veces All-Star)".format(nombre, posicion))
+
+
+def examne_parcial_extrav3(lista_jugadores: list):
+    '''
+    Esta funcion muestra el mayor de todas las key de estadisticas
+    recibe la lista de jugadores
+    '''
+    for tipos_estadisticas in lista_jugadores[0]["estadisticas"]:
+        calcular_max__min_segun_key(
+            lista_jugadores, tipos_estadisticas, "mayor")

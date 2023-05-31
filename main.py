@@ -16,8 +16,7 @@ lista_jugadores = parse_json(ruta_archivo)
 flag = True
 while True:
     opcion = input("Ingrese opcion: ")
-    if (opcion >= "0" or opcion == "21" or opcion == "22" or opcion > "24"):
-        print("Ingreso mal la opcion")
+
     if (opcion == "1"):
 
         mostrar_nombre_posicion(lista_jugadores)
@@ -143,6 +142,18 @@ while True:
         calcular_posicion_rankin(lista_jugadores)
 
     elif (opcion == "24"):
+
+        examne_parcial_extra(lista_jugadores)
+
+    elif (opcion == "25"):
+
+        examne_parcial_extrav2(lista_jugadores)
+
+    elif (opcion == "26"):
+
+        examne_parcial_extrav3(lista_jugadores)
+
+    elif (opcion == "28"):
         print("Saliste del programa")
         break
 
